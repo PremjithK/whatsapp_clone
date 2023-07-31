@@ -7,12 +7,22 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _controller = TabController(length: 4, vsync: this, initialIndex: 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "WhatsApp",
           style: TextStyle(color: Colors.white),
         ),
@@ -20,13 +30,13 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.camera_alt,
                 color: Colors.white,
               )),
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             color: Colors.white,
           ),
           PopupMenuButton(
@@ -36,15 +46,41 @@ class _HomePageState extends State<HomePage> {
             },
             itemBuilder: (context) {
               return [
-                PopupMenuItem(value: 1, child: Text("New Group")),
-                PopupMenuItem(value: 2, child: Text("New Broadcast")),
-                PopupMenuItem(value: 3, child: Text("linked Devices")),
-                PopupMenuItem(value: 4, child: Text("Starred Messages")),
-                PopupMenuItem(value: 5, child: Text("Payments")),
-                PopupMenuItem(value: 6, child: Text("Settings")),
+                const PopupMenuItem(value: 1, child: Text("New Group")),
+                const PopupMenuItem(value: 2, child: Text("New Broadcast")),
+                const PopupMenuItem(value: 3, child: Text("linked Devices")),
+                const PopupMenuItem(value: 4, child: Text("Starred Messages")),
+                const PopupMenuItem(value: 5, child: Text("Payments")),
+                const PopupMenuItem(value: 6, child: Text("Settings")),
               ];
             },
           )
+        ],
+        bottom: TabBar(
+          tabs: const [
+            Tab(
+              icon: Icon(Icons.camera_alt),
+            ),
+            Tab(
+              text: "Chats",
+            ),
+            Tab(
+              text: "Status",
+            ),
+            Tab(
+              text: "Calls",
+            ),
+          ],
+          controller: _controller,
+        ),
+      ),
+      body: TabBarView(
+        controller: _controller,
+        children: [
+          Text("Camera"),
+          Text("Chats"),
+          Text("Status"),
+          Text("Calls")
         ],
       ),
     );
