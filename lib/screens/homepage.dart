@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage>
       appBar: AppBar(
         title: const Text(
           "WhatsApp",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.teal,
         actions: [
