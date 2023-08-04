@@ -6,9 +6,9 @@ class ChatPage extends StatelessWidget {
   ChatPage({super.key});
   List<Chat> chatList = [
     Chat(
-        avatar: "",
+        avatar: "https://static.thenounproject.com/png/4035884-200.png",
         name: "Amal",
-        isGroup: false,
+        isGroup: true,
         updatedAt: "10:00am",
         message: "How are you"),
     Chat(
@@ -32,7 +32,7 @@ class ChatPage extends StatelessWidget {
       body: ListView.builder(
         itemCount: chatList.length,
         itemBuilder: (context, index) {
-          return ChatTile(chat_data: chatList[index]);
+          return ChatTile(chatData: chatList[index]);
         },
       ),
     );
