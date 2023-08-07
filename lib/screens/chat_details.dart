@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/models/chat_model.dart';
 import 'package:whatsapp_clone/models/single_chat_model.dart';
+import 'package:whatsapp_clone/widgets/chat_bubble.dart';
 import 'package:whatsapp_clone/widgets/utilities_widget.dart';
 
 class ChatDetails extends StatefulWidget {
@@ -22,6 +23,16 @@ class _ChatDetailsState extends State<ChatDetails> {
         isSent: false, isRead: false, message: "Kannur", sentAt: "10:05am"),
     SingleChat(
         isSent: true,
+        isRead: true,
+        message: "When did you get there?",
+        sentAt: "10:10am"),
+    SingleChat(
+        isSent: false,
+        isRead: false,
+        message: "When did you get there?",
+        sentAt: "10:10am"),
+    SingleChat(
+        isSent: false,
         isRead: false,
         message: "When did you get there?",
         sentAt: "10:10am"),
@@ -107,8 +118,9 @@ class _ChatDetailsState extends State<ChatDetails> {
               ),
             ),
             ListView.builder(
+              itemCount: messageList.length,
               itemBuilder: (context, index) {
-                return Text("Hello");
+                return ChatBubble(messageList: messageList[index]);
               },
             )
           ],
