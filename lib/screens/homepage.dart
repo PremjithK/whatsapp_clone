@@ -77,12 +77,7 @@ class _HomePageState extends State<HomePage>
       ),
       body: TabBarView(
         controller: _controller,
-        children:  [
-          Text("Camera"),
-          ChatPage(),
-          Text('status'),
-          Text("Calls")
-        ],
+        children: [Text("Camera"), ChatPage(), Text('Status'), Text("Calls")],
       ),
     );
   }
