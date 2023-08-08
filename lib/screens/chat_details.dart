@@ -1,3 +1,4 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/models/chat_model.dart';
 import 'package:whatsapp_clone/models/single_chat_model.dart';
@@ -37,6 +38,9 @@ class _ChatDetailsState extends State<ChatDetails> {
         message: "When did you get there?",
         sentAt: "10:10am"),
   ];
+  bool showSend = false;
+  bool showEmoji = false;
+  TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +98,7 @@ class _ChatDetailsState extends State<ChatDetails> {
             PopupMenuButton(
               color: Colors.white,
               itemBuilder: (context) {
-                return [
+                return const [
                   PopupMenuItem(child: Text("Group Info")),
                   PopupMenuItem(child: Text("Group Media")),
                   PopupMenuItem(child: Text("Group Search")),
@@ -122,8 +126,189 @@ class _ChatDetailsState extends State<ChatDetails> {
               itemBuilder: (context, index) {
                 return ChatBubble(messageList: messageList[index]);
               },
-            )
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25)),
+                        width: MediaQuery.of(context).size.width - 70,
+                        child: TextField(
+                          onChanged: (value) {
+                            if (value.length > 0) {
+                              setState(() {
+                                showSend = true;
+                              });
+                            } else {
+                              setState(() {
+                                showSend = false;
+                              });
+                            }
+                          },
+                          onTap: () {
+                            setState(() {
+                              showEmoji = true;
+                            });
+                          },
+                          controller: _textController,
+                          cursorColor: Colors.teal,
+                          style: TextStyle(fontSize: 20),
+                          decoration: InputDecoration(
+                              prefixIcon: IconButton(
+                                  onPressed: () {
+                                    if (showEmoji) {
+                                      FocusScope.of(context).unfocus();
+                                    }
+                                    setState(() {
+                                      showEmoji = !showEmoji;
+                                    });
+                                  },
+                                  icon: (showEmoji)
+                                      ? Icon(Icons.emoji_emotions_outlined)
+                                      : Icon(Icons.keyboard)),
+                              border: InputBorder.none,
+                              hintText: "Enter message",
+                              hintStyle: TextStyle(fontSize: 15),
+                              suffixIcon: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                      onPressed: () => showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => bottomMenu(),
+                                          ),
+                                      icon: Icon(Icons.attach_file)),
+                                  Icon(Icons.currency_rupee_rounded),
+                                  UtilityWidget().widthSpace(5),
+                                  Icon(Icons.camera_alt),
+                                  UtilityWidget().widthSpace(15),
+                                ],
+                              )),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 5),
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.teal,
+                          onPressed: () {
+                            setState(() {
+                              messageList.add(SingleChat(
+                                  isSent: true,
+                                  isRead: false,
+                                  message: _textController.text,
+                                  sentAt: "10:10am"));
+                            });
+                            _textController.clear();
+                          },
+                          child:
+                              (showSend) ? Icon(Icons.send) : Icon(Icons.mic),
+                        ),
+                      )
+                    ],
+                  ),
+                  Offstage(
+                    offstage: showEmoji,
+                    child: SizedBox(
+                      height: 300,
+                      child: EmojiPicker(
+                        textEditingController: _textController,
+                        onEmojiSelected: (category, emoji) {
+                          setState(() {
+                            showSend = true;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ));
+  }
+
+  Container bottomMenu() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+      width: 350,
+      height: 350,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              menuIcon(
+                  text: "Document",
+                  icon: Icon(Icons.insert_drive_file, color: Colors.white),
+                  color: Colors.indigo),
+              menuIcon(
+                  text: "Camera",
+                  icon: Icon(Icons.camera_alt, color: Colors.white),
+                  color: Colors.pink),
+              menuIcon(
+                  text: "Gallery",
+                  icon: Icon(Icons.insert_photo, color: Colors.white),
+                  color: Colors.purple),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              menuIcon(
+                  text: "Audio",
+                  icon: Icon(Icons.headset, color: Colors.white),
+                  color: Colors.orange),
+              menuIcon(
+                  text: "Location",
+                  icon: Icon(Icons.location_pin, color: Colors.white),
+                  color: Colors.green),
+              menuIcon(
+                  text: "Payments",
+                  icon: Icon(Icons.currency_rupee_rounded, color: Colors.white),
+                  color: Colors.teal),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              menuIcon(
+                  text: "Contact",
+                  icon: Icon(Icons.contact_phone, color: Colors.white),
+                  color: Colors.blue),
+              menuIcon(
+                  text: "Poll",
+                  icon: Icon(Icons.poll, color: Colors.white),
+                  color: Colors.teal),
+              UtilityWidget().widthSpace(60)
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Column menuIcon(
+      {required String text, required Icon icon, required Color color}) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: color,
+          child: icon,
+        ),
+        UtilityWidget().heightSpace(10),
+        Text(
+          text,
+          style: TextStyle(color: Colors.grey),
+        )
+      ],
+    );
   }
 }
